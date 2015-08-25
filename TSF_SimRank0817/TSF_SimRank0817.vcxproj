@@ -78,6 +78,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Gowg.cpp" />
+    <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="Tsf.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Gowg.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="TSF.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
