@@ -15,17 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Gowg.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Tsf.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Graph.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Gowg.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -35,5 +24,13 @@
     <ClInclude Include="Graph.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Graphl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="compare.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

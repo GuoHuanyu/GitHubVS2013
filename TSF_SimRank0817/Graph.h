@@ -1,34 +1,54 @@
-#include"Gowg.h"
-#include "TSF.h"
-#pragma once
-class Graph
-{
-public:
-	Graph();
-	Graph(int rows);
-	~Graph();
-	int initialize(int Rg, int Rq, int T);
-	int initialize(int **graph);
-	int	deleteVertex(int v);
-	int	deleteEdge(int v, int vo);
-	int	insertEdge(int v, int vo);
-	int GenerateithOneWaygraph(int i);
-	int findNbr(int ver, std::vector<int>& nbro);
-	int randomSelect(int NoSize);
-	int UpdateVector(int v);
-	int updateSimRank(int i, int w);
-	int RandomSample(int v);
-	std::map<int, std::set<int>> gettsMap();
-	double* getsArray();
+﻿#pragma once
+// Graph abstract class. This ADT assumes that the number
+// of vertices is fixed when the graph is created.
+class Graph {
 private:
-	int** graphArray;
-	int rows;
-	int Rg;
-	int T;
-	int Rq;
-	Gowg* oneWayGraph;
-	double* sArray;
-	std::set<int>* tsList;//tsList which store meeting times
-	std::map<int, std::set<int>>tsMap;//tsMap
+	void operator =(const Graph&) {} // Protect assignment
+	Graph(const Graph&) {} // Protect copy constructor
+public:
+	Graph() {} // Default constructor
+	virtual ~Graph() {} // Base destructor
+	// Initialize a graph of n vertices
+	virtual void Init(int n) = 0;
+	// Return: the number of vertices and edges
+	virtual int n() = 0;
+	virtual int e() = 0;
+	// Return v’s first neighbor
+	virtual int first(int v) = 0;
+	// Return v’s next neighbor
+	virtual int next(int v, int w) = 0;
+	// Set the weight for an edge
+	// i, j: The vertices
+	// wgt: Edge weight
+	virtual void setEdge(int v1, int v2, int wght) = 0;
+	// Delete an edge
+	// i, j: The vertices
+	virtual void delEdge(int v1, int v2) = 0;
+	// Determine if an edge is in the graph
+	// i, j: The vertices
+	// Return: true if edge i,j has non-zero weight
+	virtual bool isEdge(int i, int j) = 0;
+	// Return an edge’s weight
+	// i, j: The vertices
+	// Return: The weight of edge i,j, or zero
+	virtual int weight(int v1, int v2) = 0;
+	// Get and Set the mark value for a vertex
+	// v: The vertex
+	// val: The value to set
+	virtual int getMark(int v) = 0;
+	virtual void setMark(int v, int val) = 0;
 };
-
+// Edge class for Adjacency List graph representation
+class Edge {
+	int vert, wt;
+public:
+	Edge() { vert = -1; wt = -1; }
+	Edge(int v, int w) { vert = v; wt = w; }
+	int vertex() { return vert; }
+	int weight() { return wt; }
+	bool operator ==(Edge);
+};
+bool Edge::operator ==(Edge com1)//运算符重载函数
+{
+	return com1.vertex() == this->vertex();
+}

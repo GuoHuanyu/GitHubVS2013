@@ -1,28 +1,37 @@
+#include"Gowg.h" 
+#include"TSF.h" 
 #include"Graph.h"
-Graph::Graph()
+#include<list>
+#include<limits>
+#pragma once
+class Graphl : public Graph 
 {
-}
-Graph::Graph(int rows)
-{
-	this->rows = rows;
-	graphArray = new int*[rows];
-	for (int i = 0; i <= rows; i++)
-		graphArray[i] = new int[rows];
-	Rg = 0;
-	Rq = 0;
-	T = 0;
-	sArray = new double[rows];
+private:
+	Gowg* oneWayGraph;
+	std::list<Edge>** vertex; // List headers
+	int numVertex, numEdge; // Number of vertices, edges
+	int Rg,T,Rq;
+	int *mark; // Pointer to mark array
+	std::list<Edge>::iterator it;
+public:
+	Graphl();
+	Graphl(int rows);
+	~Graphl();
+	int initialize(int Rg, int Rq, int T);
+	int initialize(int **graph);
+	int	deleteVertex(int v);
+	int	deleteEdge(int v, int vo);
+	int	insertEdge(int v, int vo);
+	int GenerateithOneWaygraph(int i);
+	int findNbr(int ver, std::vector<int>& nbro);
+	int randomSelect(int NoSize);
+	int UpdateVector(int v);
+	int updateSimRank(int i, int w, std::set<int>tsw, std::map<int, double>& sArrayMap);
+	int RandomSample(int v, std::set<int>*tsList, std::map<int, std::set<int>>&tsMap);
+};
 
 
-}
-
-Graph::~Graph()
-{
-	delete[]graphArray;
-	delete[]sArray;
-	delete[]tsList;
-}
-int Graph::initialize(int Rg, int Rq, int T)
+int Graphl::initialize(int Rg, int Rq, int T)
 {
 	this->Rg = Rg;
 	this->Rq = Rq;
@@ -32,12 +41,12 @@ int Graph::initialize(int Rg, int Rq, int T)
 		oneWayGraph[i] = Gowg(rows);
 	return 0;
 }
-int Graph::initialize(int** graph)
+int Graphl::initialize(int** graph)
 {
 	graphArray = graph;
 	return 0;
 }
-int Graph::insertEdge(int v, int vo)
+int Graphl::insertEdge(int v, int vo)
 {
 	if (graphArray[v][vo] == 0)
 	{
@@ -46,10 +55,10 @@ int Graph::insertEdge(int v, int vo)
 		UpdateVector(v);
 	}
 	else
-		std::cout << "Graph insertEdge" << v << "->" << vo << "Error in  Graph::insertEdge" << std::endl;
+		std::cout << " Graph insertEdge " << v << " -> " << vo << " Error in  Graph::insertEdge " << std::endl;
 	return 0;
 }
-int Graph::deleteEdge(int v, int vo)
+int Graphl::deleteEdge(int v, int vo)
 {
 	if (graphArray[v][vo])
 	{
@@ -57,11 +66,11 @@ int Graph::deleteEdge(int v, int vo)
 		UpdateVector(v);
 	}
 	else
-		std::cout << "Graph deleteEdge" << v << "->" << vo << "Error in  Graph::deleteEdge" << std::endl;
+		std::cout << " Graph deleteEdge " << v << " -> " << vo << " Error in  Graph::deleteEdge " << std::endl;
 	return 0;
-}int Graph::deleteVertex(int v)
+}int Graphl::deleteVertex(int v)
 {
-	for (int i = 1; i <= this->rows; i++)
+	for (int i = 1; i < this->rows; i++)
 	{
 		oneWayGraph[i - 1].deleteVertex(v);
 		graphArray[v][i] = 0;
@@ -73,25 +82,29 @@ int Graph::deleteEdge(int v, int vo)
 	}
 	return 0;
 }
-int Graph::GenerateithOneWaygraph(int i)
+int Graphl::GenerateithOneWaygraph(int i)
 {
 	std::vector<int> Noj;
 	for (int j = 1; j < rows; j++)
 	{
 		int NoSize = findNbr(j, Noj);
-		std::cout << j << "Vector neighbours：" << NoSize << "  ";
-
+		if (NoSize == 0)
+		{
+			std::cout << j << " Vector No neighbours " << std::endl;
+			continue;
+		}
+		std::cout << j << " Vector neighbours is  " << NoSize << "    ";
 		int randomKey = randomSelect(NoSize);
-		std::cout << j << "Vector randomKey：" << randomKey << "  ";
+		std::cout << j << " Vector randomKey is  " << randomKey << "    ";
 		int Ue = Noj[randomKey];
 		oneWayGraph[i].insertEdage(j, Ue);
-		std::cout << "insert  " << j << "->" << Ue << std::endl;
+		std::cout << " insert   " << j << " -> " << Ue << std::endl;
 		Noj.clear();
 	}
 	oneWayGraph[i].generateIndexArray();
 	return 0;
 }
-int Graph::findNbr(int ver, std::vector<int>& nbro)
+int Graphl::findNbr(int ver, std::vector<int>& nbro)
 {
 	int size = 0;
 	nbro.clear();
@@ -105,7 +118,7 @@ int Graph::findNbr(int ver, std::vector<int>& nbro)
 	}
 	return size;
 }
-int Graph::randomSelect(int NoSize)
+int Graphl::randomSelect(int NoSize)
 {
 	if (NoSize == 0)
 		return 0;
@@ -116,26 +129,25 @@ int Graph::randomSelect(int NoSize)
 		return u(e);
 	}
 }
-int Graph::UpdateVector(int v)
+int Graphl::UpdateVector(int v)
 {
 	std::vector<int> Nov;
 	int NoSize = findNbr(v, Nov);
-	std::cout << v << "Vector neighbours：" << NoSize << "  ";
+	std::cout << v << " Vector neighbours is  " << NoSize << "    ";
 	for (int i = 0; i < Rg; i++)
 	{
 		int randomKey = randomSelect(NoSize);
-		std::cout << v << "Vector randomKey：" << randomKey << "  ";
+		std::cout << v << " Vector randomKey is  " << randomKey << "    ";
 		int Ue = Nov[randomKey];
 		oneWayGraph[i].changeEdge(v, Ue);
 		oneWayGraph[i].generateIndexArray();
 	}
 	return 0;
 }
-int Graph::RandomSample(int v)
+int Graphl::RandomSample(int v, std::set<int>*tsList, std::map<int, std::set<int>>&tsMap)
 {
 	//清空上次随机游走结果 
-	delete[]tsList;
-	tsList = new std::set<int>[rows];
+	//delete[]tsList;
 	tsMap.clear();
 	//开始新一次随机游走
 	std::vector<int> Nov;
@@ -148,13 +160,16 @@ int Graph::RandomSample(int v)
 			//random select a vertex form  No(Ue)
 			int NoSize = findNbr(Ue, Nov);
 			if (!NoSize)
+			{
+				std::cout << " random sample  " << i << "  step end in vertex  " << Ue << std::endl;
 				break;
+			}
 			else
 			{
 				int randomKey = randomSelect(NoSize);
-				std::cout << Ue << "Vector neighbours：" << NoSize << "  ";
-				std::cout << Ue << "Vector randomKey：" << randomKey << "  ";
-				std::cout << "sample random walks " << Ue << "->" << Nov[randomKey] << std::endl;
+				std::cout << Ue << " Vector neighbours is  " << NoSize << "    ";
+				std::cout << Ue << " Vector randomKey is  " << randomKey << "    ";
+				std::cout << " sample random walks  " << Ue << " -> " << Nov[randomKey] << std::endl;
 				Ue = Nov[randomKey];
 				//records possible meeting vertices in tsMap
 				tsList[Ue].insert(i);
@@ -177,10 +192,9 @@ int Graph::RandomSample(int v)
 	return 0;
 }
 //traverse Girowg starting from w
-int Graph::updateSimRank(int i, int w)
+int Graphl::updateSimRank(int i, int w, std::set<int>tsw, std::map<int, double>& sArrayMap)
 {
 	Gowg oneWayGra = oneWayGraph[i];
-	std::set<int>tsw = tsList[w];
 	int t = 0;
 	//set<int> queset;
 	std::set<int> oneStepSet;
@@ -209,11 +223,28 @@ int Graph::updateSimRank(int i, int w)
 
 		if (find(tsw.begin(), tsw.end(), t) != tsw.end())
 		{
-			for (it = newset.begin(); it != newset.end(); it++)
+			it = newset.begin();
+			if (it == newset.end())
+			{
+				std::cout << w << " in step " << t << " no vertex";
+			}
+			for (; it != newset.end(); it++)
 			{
 				int u = *it;
-				sArray[u] = sArray[u] + pow(C, t);
-				std::cout << "sArray[" << u << "] +=C^" << t << "   ";
+				std::map<int, double>::iterator s_it;
+				s_it = sArrayMap.find(u);
+				if (s_it == sArrayMap.end())
+				{
+					double sArray = pow(C, t);
+					sArrayMap.insert(std::make_pair(u, sArray));
+
+				}
+				else
+				{
+					double sArray = s_it->second + pow(C, t);
+					s_it->second = sArray;
+				}
+				std::cout << " sArray[ " << u << " ] +=C^ " << t << "     ";
 			}
 		}
 		oneStepSet.clear();
@@ -223,11 +254,4 @@ int Graph::updateSimRank(int i, int w)
 	std::cout << std::endl;
 	return 0;
 }
-std::map<int, std::set<int>> Graph::gettsMap()
-{
-	return tsMap;
-}
-double* Graph::getsArray()
-{
-	return sArray;
-}
+
